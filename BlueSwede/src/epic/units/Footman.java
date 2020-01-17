@@ -4,21 +4,30 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
 import epic.CollisionDetector;
+import epic.Main;
 import epic.Orders;
 import epic.Unit;
+import javafx.util.Pair;
 
 public class Footman implements Unit {
 
 	private double coordX, coordY;
-	private int targetX, targetY;
+	//private int targetX, targetY;
+	private Pair <Integer, Integer> targetCoords;
+	private List<Pair<Integer, Integer>> midCoordinates = new ArrayList<>();
+	private Pair <Integer, Integer> currentMidCoords;
 
 	private static BufferedImage avatarBig;
 	private static BufferedImage avatar;
+
+
 
 	static {
 		File srcImageBig = new File("BlueSwede/resource/img/footman_big.jpg");
@@ -43,26 +52,30 @@ public class Footman implements Unit {
 	private static int size = 5;
 
 	@Override
-	public void setTarget(int newTargetX, int newTargetY) {
-		this.targetX = newTargetX;
-		this.targetY = newTargetY;
+	public synchronized void setTarget(int newTargetX, int newTargetY) {
+		System.out.println("Setting target in footman");
+		this.targetCoords = new Pair<>(newTargetX, newTargetY);
+		midCoordinates = new ArrayList<>();
+		midCoordinates.add(targetCoords);
+		currentMidCoords = midCoordinates.get(0);
+		Main.addMovingUnit(this);
 	}
 
 	@Override
 	public void move() {
-		if (!(coordX == targetX && coordY == targetY)) {
+		if (!(coordX == currentMidCoords.getKey() && coordY == currentMidCoords.getValue())) {
 			double stepX, stepY, dist;
 
-			dist = Math.sqrt(Math.pow(targetX - coordX, 2) + Math.pow(targetY - coordY, 2));
+			dist = Math.sqrt(Math.pow(currentMidCoords.getKey() - coordX, 2) + Math.pow(currentMidCoords.getValue() - coordY, 2));
 
 			if (dist < 1) {
-				coordX = targetX;
-				coordY = targetY;
+				coordX = currentMidCoords.getKey();
+				coordY = currentMidCoords.getValue();
 				return;
 			}
 
-			stepX = (targetX - coordX) / dist;
-			stepY = (targetY - coordY) / dist;
+			stepX = (currentMidCoords.getKey() - coordX) / dist;
+			stepY = (currentMidCoords.getValue() - coordY) / dist;
 
 			// System.out.println("StepX: " + stepX + " StepY:" + stepY + "
 			// Dist: " + dist);
@@ -75,19 +88,27 @@ public class Footman implements Unit {
 				coordY -= stepY;
 			}
 		}
+		else {
+			moveThroughMidCoords();
+		}
+	}
 
+	private void moveThroughMidCoords() {
+		if(!midCoordinates.isEmpty() && midCoordinates.iterator().hasNext()) {
+			this.currentMidCoords = midCoordinates.iterator().next();
+		} else {
+			Main.removeMovingUnit(this);
+		}
 	}
 
 	public Footman(int coordX2, int coordY2) {
 		this.setCoordX(coordX2);
 		this.setCoordY(coordY2);
-		this.setTarget(coordX2, coordY2);
 	}
 
 	@Override
 	public double[] getCoords() {
-		double[] coords = { getCoordX(), getCoordY() };
-		return coords;
+		return new double[]{ getCoordX(), getCoordY() };
 	}
 
 	public double getCoordX() {
@@ -108,10 +129,8 @@ public class Footman implements Unit {
 
 	@Override
 	public boolean contains(Point2D point) {
-		if (point.getX() >= coordX && point.getX() <= coordX + size) {
-			if (point.getY() >= coordY && point.getY() <= coordY + size) {
+		if (point.getX() >= coordX && point.getX() <= coordX + size && point.getY() >= coordY && point.getY() <= coordY + size) {
 				return true;
-			}
 		}
 		return false;
 	}

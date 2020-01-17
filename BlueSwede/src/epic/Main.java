@@ -6,26 +6,43 @@ import java.util.List;
 import javax.swing.JFrame;
 
 import epic.terrain.Terrain;
+import epic.units.Footman;
 import myAwt.MyFrame;
 import myAwt.MyFrame.*;
 
 public class Main {
 
-	public enum State {
-		STRATEGIC, TACTICAL, ECONOMIC, ECONOMIC_PLACING;
-	}
-	private static List<Building> buildings = new ArrayList<Building>();
+	private static List<Unit> movingUnits = new ArrayList<>();
+	private static List<Unit> movingUnitsPreparedForRemoval = new ArrayList<>();
 
-	private static List<Unit> units = new ArrayList<Unit>();
+	public static void addMovingUnit(Unit unit) {
+		movingUnits.add(unit);
+	}
+	public static void removeMovingUnit(Unit unit) {
+		movingUnitsPreparedForRemoval.add(unit);
+	}
+	private static void removeMovingUnit(List<Unit> unitsToRemove) {
+		movingUnits.remove(unitsToRemove);
+	}
+	public static List<Unit> getMovingUnits() {
+		return movingUnits;
+	}
+
+	public enum State {
+		STRATEGIC, TACTICAL, ECONOMIC, ECONOMIC_PLACING
+	}
+	private static List<Building> buildings = new ArrayList<>();
+
+	private static List<Unit> units = new ArrayList<>();
 
 	private static State activeState;
 
 	private static Placeable activeSelection;
-	private static List<Unit> activeGroupSelection = new ArrayList<Unit>();
+	private static List<Unit> activeGroupSelection = new ArrayList<>();
 
 	private static JFrame mainFrame;
 	
-	private static List<Placeable> allPlacedObjects = new ArrayList<Placeable>();
+	private static List<Placeable> allPlacedObjects = new ArrayList<>();
 
 	private static int mapSizeX;
 	private static int mapSizeY;
@@ -48,7 +65,6 @@ public class Main {
 				mainFrame = new MyFrame();
 			}
 		}).run();
-		;
 
 		new Thread(new Runnable() {
 			Long timeMillis = System.currentTimeMillis();
@@ -59,14 +75,17 @@ public class Main {
 							&& mainFrame != null) {
 						timeMillis = System.currentTimeMillis();
 						mainFrame.repaint();
-						for(Unit unit : getUnits()){
-							unit.move();
+						if (!getMovingUnits().isEmpty()) {
+							for (Unit unit : getMovingUnits()) {
+								unit.move();
+							}
+							removeMovingUnit(movingUnitsPreparedForRemoval);
 						}
 					}
 				}
 			}
 		}).run();
-		;
+
 
 	}
 
@@ -117,8 +136,8 @@ public class Main {
 	}
 
 	public static void reset() {
-		buildings = new ArrayList<Building>();
-		units = new ArrayList<Unit>();
+		buildings = new ArrayList<>();
+		units = new ArrayList<>();
 		activeState = State.ECONOMIC;
 		activeSelection = null;
 	}
