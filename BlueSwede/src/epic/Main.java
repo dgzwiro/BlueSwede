@@ -7,180 +7,154 @@ import javax.swing.JFrame;
 
 import epic.terrain.Terrain;
 import myAwt.MyFrame;
-import myAwt.MyFrame.*;
 
 public class Main {
 
-	public enum State {
-		STRATEGIC, TACTICAL, ECONOMIC, ECONOMIC_PLACING;
-	}
-	private static List<Building> buildings = new ArrayList<Building>();
+    public enum State {
+        STRATEGIC, TACTICAL, ECONOMIC, ECONOMIC_PLACING
+    }
 
-	private static List<Unit> units = new ArrayList<Unit>();
+    private static List<Building> buildings = new ArrayList<>();
 
-	private static State activeState;
+    private static List<Unit> units = new ArrayList<>();
 
-	private static Placeable activeSelection;
-	private static List<Unit> activeGroupSelection = new ArrayList<Unit>();
+    private static State activeState;
 
-	private static JFrame mainFrame;
-	
-	private static List<Placeable> allPlacedObjects = new ArrayList<Placeable>();
+    private static Placeable activeSelection;
+    private static List<Unit> activeGroupSelection = new ArrayList<>();
 
-	private static int mapSizeX;
-	private static int mapSizeY;
+    private static JFrame mainFrame;
 
-	private static int mapTilesX = 30;
-	private static int mapTilesY = 15;
+    private static List<Placeable> allPlacedObjects = new ArrayList<>();
 
-	static {
-		mapSizeX = (mapTilesX * 50);
-		mapSizeY = (mapTilesY * 50);
-	}
+    private static int mapSizeX;
+    private static int mapSizeY;
 
-	public static void main(String[] args) {
+    private static int mapTilesX = 30;
+    private static int mapTilesY = 15;
 
-		setActiveState(State.ECONOMIC);
+    static {
+        mapSizeX = (mapTilesX * 50);
+        mapSizeY = (mapTilesY * 50);
+    }
 
-		new Thread(new Runnable() {
+    public static void main(String[] args) {
 
-			public void run() {
-				mainFrame = new MyFrame();
-			}
-		}).run();
-		;
+        setActiveState(State.ECONOMIC);
 
-		new Thread(new Runnable() {
-			Long timeMillis = System.currentTimeMillis();
+        new Thread(() -> mainFrame = new MyFrame()).start();
 
-			public void run() {
-				while (true) {
-					if (System.currentTimeMillis() - timeMillis >= 30
-							&& mainFrame != null) {
-						timeMillis = System.currentTimeMillis();
-						mainFrame.repaint();
-						for(Unit unit : getUnits()){
-							unit.move();
-						}
-					}
-				}
-			}
-		}).run();
-		;
+        new Thread(new Runnable() {
+            Long timeMillis = System.currentTimeMillis();
 
-	}
+            public void run() {
+                while (true) {
+                    if (System.currentTimeMillis() - timeMillis >= 30
+                            && mainFrame != null) {
+                        timeMillis = System.currentTimeMillis();
+                        mainFrame.repaint();
+                        for (Unit unit : getUnits()) {
+                            unit.move();
+                        }
+                    }
+                }
+            }
+        }).start();
 
-	public static State getActiveState() {
-		return activeState;
-	}
+    }
 
-	public static void setActiveState(State activeState) {
-		Main.activeState = activeState;
-	}
+    public static State getActiveState() {
+        return activeState;
+    }
 
-	public static List<Building> getBuildings() {
-		return buildings;
-	}
+    public static void setActiveState(State activeState) {
+        Main.activeState = activeState;
+    }
 
-	public static void addBuilding(Building newBuilding) {
-		buildings.add(newBuilding);
-		allPlacedObjects.add(newBuilding);
-	}
+    public static List<Building> getBuildings() {
+        return buildings;
+    }
 
-	public static List<Unit> getUnits() {
-		return units;
-	}
+    public static void addBuilding(Building newBuilding) {
+        buildings.add(newBuilding);
+        allPlacedObjects.add(newBuilding);
+    }
 
-	public static void addUnit(Unit newUnit) {
-		units.add(newUnit);
-		allPlacedObjects.add(newUnit);
-	}
+    public static List<Unit> getUnits() {
+        return units;
+    }
 
-	public static Placeable getActiveSelection() {
-		return activeSelection;
-	}
+    public static void addUnit(Unit newUnit) {
+        units.add(newUnit);
+        allPlacedObjects.add(newUnit);
+    }
 
-	public static void setActiveSelection(Placeable newActiveSelection) {
-		Main.activeSelection = newActiveSelection;
-	}
+    public static Placeable getActiveSelection() {
+        return activeSelection;
+    }
 
-	public static List<Unit> getActiveGroupSelection() {
-		return activeGroupSelection;
-	}
+    public static void setActiveSelection(Placeable newActiveSelection) {
+        Main.activeSelection = newActiveSelection;
+    }
 
-	public static void addActiveGroupSelection(Unit unit) {
-		Main.activeGroupSelection.add(unit);
-	}
+    public static List<Unit> getActiveGroupSelection() {
+        return activeGroupSelection;
+    }
 
-	public static void cleanActiveGroupSelection() {
-		Main.activeGroupSelection.clear();
-	}
+    public static void addActiveGroupSelection(Unit unit) {
+        Main.activeGroupSelection.add(unit);
+    }
 
-	public static void reset() {
-		buildings = new ArrayList<Building>();
-		units = new ArrayList<Unit>();
-		activeState = State.ECONOMIC;
-		activeSelection = null;
-	}
-	
-	private static Terrain[][] terrain = new Terrain[mapTilesX][mapTilesY];
+    public static void cleanActiveGroupSelection() {
+        Main.activeGroupSelection.clear();
+    }
 
-	static {
-		for (int i = 0; i < mapTilesX; i++) {
-			for (int j = 0; j < mapTilesY; j++) {
-				terrain[i][j] = new Terrain();
-			}
-		}
-	}
+    public static void reset() {
+        buildings = new ArrayList<>();
+        units = new ArrayList<>();
+        activeState = State.ECONOMIC;
+        activeSelection = null;
+    }
 
-	public static List<Placeable> getAllPlacedObjects() {
-		return allPlacedObjects;
-	}
+    private static Terrain[][] terrain = new Terrain[mapTilesX][mapTilesY];
 
-	public static void addPlacedObjects(Placeable placedObject) {
-		allPlacedObjects.add(placedObject);
-	}
+    static {
+        for (int i = 0; i < mapTilesX; i++) {
+            for (int j = 0; j < mapTilesY; j++) {
+                terrain[i][j] = new Terrain();
+            }
+        }
+    }
 
-	public static Terrain[][] getTerrain() {
-		return terrain;
-	}
+    public static List<Placeable> getAllPlacedObjects() {
+        return allPlacedObjects;
+    }
 
-	public static void changeTerrrain(int posX, int posY, Terrain wantedTerrain) {
-		int index_x = posX / 50;
-		int index_y = posY / 50;
+    public static Terrain[][] getTerrain() {
+        return terrain;
+    }
 
-		terrain[index_x][index_y] = wantedTerrain;
-	}
+    public static int getMapSizeX() {
+        return mapSizeX;
+    }
 
-	public static int getMapSizeX() {
-		return mapSizeX;
-	}
+    public static int getMapSizeY() {
+        return mapSizeY;
+    }
 
-	public static int getMapSizeY() {
-		return mapSizeY;
-	}
+    public static void setMapSize(int tilesX, int tilesY) {
+        mapTilesX = tilesX;
+        mapTilesY = tilesY;
 
-	public static int getMapTilesX() {
-		return mapTilesX;
-	}
+        mapSizeX = (tilesX * 50);
+        mapSizeY = (tilesY * 50);
+    }
 
-	public static int getMapTilesY() {
-		return mapTilesY;
-	}
-
-	public static void setMapSize(int tilesX, int tilesY) {
-		mapTilesX = tilesX;
-		mapTilesY = tilesY;
-
-		mapSizeX = (tilesX * 50);
-		mapSizeY = (tilesY * 50);
-	}
-
-	public static void loadMap(int tilesX, int tilesY, Terrain[][] loadedTerrain, List<Placeable> placedObjects){
-		setMapSize(tilesX, tilesY);
-		terrain = loadedTerrain;
-		allPlacedObjects = placedObjects;
-		reset();
-	}
+    public static void loadMap(int tilesX, int tilesY, Terrain[][] loadedTerrain, List<Placeable> placedObjects) {
+        setMapSize(tilesX, tilesY);
+        terrain = loadedTerrain;
+        allPlacedObjects = placedObjects;
+        reset();
+    }
 
 }
