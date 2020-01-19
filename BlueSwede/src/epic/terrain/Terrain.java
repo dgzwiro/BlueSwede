@@ -9,31 +9,30 @@ import javax.imageio.ImageIO;
 public class Terrain {
 
 	public enum Type {
-		WATER, GRASS, SAND, MOUNTAIN;
+		WATER, GRASS, SAND, MOUNTAIN
 	}
 	
-	private Type terrain_type;
+	private Type terrainType;
 	private BufferedImage sprite;
 
 	public Terrain() {
-		terrain_type = Type.WATER;
+		terrainType = Type.WATER;
 		setImage();
 	}
 
-	public void setTile(Type wanted_tile) {
-		terrain_type = wanted_tile;
+	public void setTile(Type wantedTile) {
+		terrainType = wantedTile;
 		setImage();
 	}
 	
 	public Type getType(){
-		return terrain_type;
+		return terrainType;
 	}
 	
 	private void setImage() {
-		//System.out.println("Setting image");
-		File srcImage = null;
+		File srcImage;
 
-		switch (terrain_type) {
+		switch (terrainType) {
 		case GRASS:
 			srcImage = new File("BlueSwede/resource/img/grass.jpg");
 			break;
@@ -62,8 +61,8 @@ public class Terrain {
 		}
 	}
 
-	private void setSprite(BufferedImage new_sprite) {
-		this.sprite = new_sprite;
+	private void setSprite(BufferedImage newSprite) {
+		this.sprite = newSprite;
 	}
 
 	public BufferedImage getSprite() {
@@ -72,7 +71,7 @@ public class Terrain {
 
 	@Override
 	public String toString(){
-		switch(this.terrain_type){
+		switch(this.terrainType){
 		case GRASS:
 			return "GRASS";
 		case MOUNTAIN:
