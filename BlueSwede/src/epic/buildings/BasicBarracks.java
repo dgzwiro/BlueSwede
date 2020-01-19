@@ -14,107 +14,101 @@ import epic.Orders;
 
 public class BasicBarracks implements Building {
 
-	private double coordX;
-	private double coordY;
-	private static BufferedImage avatar;
-	private static BufferedImage avatarBig;
-	private static List<Orders> orders = new ArrayList<Orders>();
+    private double coordX;
+    private double coordY;
+    private static BufferedImage avatar;
+    private static BufferedImage avatarBig;
+    private static List<Orders> orders = new ArrayList<>();
+    private static final int SIZE = 30;
+    private static final int VALUE =0;
 
-	static {
-		orders.add(Orders.FootmanProduction);
-		orders.add(Orders.MarksmanProduction);
+    static {
+        orders.add(Orders.FootmanProduction);
+        orders.add(Orders.MarksmanProduction);
 
-		File srcImage = new File("BlueSwede/resource/img/basic_barracks.jpg");
-		File srcImageBig = new File("BlueSwede/resource/img/basic_barracks_big.jpg");
-		try {
-			setAvatar(ImageIO.read(srcImage));
-			setAvatarBig(ImageIO.read(srcImageBig));
-		} catch (IOException e) {
-			System.err.println("Error in loading image");
-			e.printStackTrace();
-			setAvatar(new BufferedImage(20, 20, BufferedImage.TYPE_INT_RGB));
-		}
-	}
+        File srcImage = new File("BlueSwede/resource/img/basic_barracks.jpg");
+        File srcImageBig = new File("BlueSwede/resource/img/basic_barracks_big.jpg");
+        try {
+            setAvatar(ImageIO.read(srcImage));
+            setAvatarBig(ImageIO.read(srcImageBig));
+        } catch (IOException e) {
+            System.err.println("Error in loading image");
+            e.printStackTrace();
+            setAvatar(new BufferedImage(20, 20, BufferedImage.TYPE_INT_RGB));
+        }
+    }
 
-	private static final int size = 30;
 
-	public BasicBarracks(int coordX, int coordY) {
-		setCoords(coordX, coordY);
-	}
+    public BasicBarracks(int coordX, int coordY) {
+        setCoords(coordX, coordY);
+    }
 
-	@Override
-	public double[] getCoords() {
-		double[] coords = { getCoordX(), getCoordY() };
-		return coords;
-	}
+    @Override
+    public double[] getCoords() {
+        return new double[]{getCoordX(), getCoordY()};
+    }
 
-	public double getCoordX() {
-		return coordX;
-	}
+    public double getCoordX() {
+        return coordX;
+    }
 
-	private void setCoordX(int coordX) {
-		this.coordX = coordX;
-	}
+    private void setCoordX(int coordX) {
+        this.coordX = coordX;
+    }
 
-	public double getCoordY() {
-		return coordY;
-	}
+    public double getCoordY() {
+        return coordY;
+    }
 
-	private void setCoordY(int coordY) {
-		this.coordY = coordY;
-	}
+    private void setCoordY(int coordY) {
+        this.coordY = coordY;
+    }
 
-	@Override
-	public boolean contains(Point2D point) {
-		if (point.getX() >= coordX && point.getX() <= coordX + size) {
-			if (point.getY() >= coordY && point.getY() <= coordY + size) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean contains(Point2D point) {
+        if (point.getX() >= coordX && point.getX() <= coordX + SIZE) {
+			return point.getY() >= coordY && point.getY() <= coordY + SIZE;
+        }
+        return false;
+    }
 
-	public int getSize() {
-		return size;
-	}
+    public int getSize() {
+        return SIZE;
+    }
 
-	public BufferedImage getAvatar() {
-		return avatar;
-	}
+    public BufferedImage getAvatar() {
+        return avatar;
+    }
 
-	private static void setAvatar(BufferedImage avatar) {
-		BasicBarracks.avatar = avatar;
-	}
+    private static void setAvatar(BufferedImage avatar) {
+        BasicBarracks.avatar = avatar;
+    }
 
-	private static void setAvatarBig(BufferedImage avatar) {
-		BasicBarracks.avatarBig = avatar;
-	}
+    private static void setAvatarBig(BufferedImage avatar) {
+        BasicBarracks.avatarBig = avatar;
+    }
 
-	@Override
-	public BufferedImage getAvatarBig() {
-		return avatarBig;
-	}
+    @Override
+    public BufferedImage getAvatarBig() {
+        return avatarBig;
+    }
 
-	@Override
-	public List<Orders> getOrders() {
-		return orders;
-	}
+    @Override
+    public List<Orders> getOrders() {
+        return orders;
+    }
 
-	@Override
-	public void setCoords(int coordX, int coordY) {
-		setCoordY(coordY);
-		setCoordX(coordX);
+    @Override
+    public void setCoords(int coordX, int coordY) {
+        setCoordY(coordY);
+        setCoordX(coordX);
 
-	}
+    }
 
-	@Override
-	public String toString(){
-		return "X:" + coordX + "Y:" + coordY + "type:BBARRACKValue:" + getValue();
-	}
+    @Override
+    public String toString() {
+        return "X:" + coordX + "Y:" + coordY + "type:BBARRACKValue:" + VALUE;
+    }
 
-	private int getValue() {
-		
-		return 0;
-	}
 
 }
