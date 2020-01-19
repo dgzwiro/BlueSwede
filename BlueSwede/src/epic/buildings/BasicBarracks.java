@@ -20,7 +20,7 @@ public class BasicBarracks implements Building {
     private static BufferedImage avatarBig;
     private static List<Orders> orders = new ArrayList<>();
     private static final int SIZE = 30;
-    private static final int VALUE =0;
+    private static final int VALUE = 0;
 
     static {
         orders.add(Orders.FootmanProduction);
@@ -66,10 +66,7 @@ public class BasicBarracks implements Building {
 
     @Override
     public boolean contains(Point2D point) {
-        if (point.getX() >= coordX && point.getX() <= coordX + SIZE) {
-			return point.getY() >= coordY && point.getY() <= coordY + SIZE;
-        }
-        return false;
+        return (point.getX() >= coordX && point.getX() <= coordX + SIZE) && (point.getY() >= coordY && point.getY() <= coordY + SIZE);
     }
 
     public int getSize() {
