@@ -12,8 +12,8 @@ import epic.units.Footman;
 
 
 public enum Orders {
-	FootmanProduction("BlueSwede/resource/icons/footman_icon.jpg"),
-	MarksmanProduction("BlueSwede/resource/icons/marksman_icon.jpg");
+	FOOTMAN_PRODUCTION("BlueSwede/resource/icons/footman_icon.jpg"),
+	MARKSMAN_PRODUCTION("BlueSwede/resource/icons/marksman_icon.jpg");
 	
 	private Icon img;
 	
@@ -26,21 +26,13 @@ public enum Orders {
 		}
 	}
 	
-	public void ExecuteOrder(double coordX, double coordY){
-		switch(this){
-		case FootmanProduction:
-			Footman newFootman = new Footman((int) coordX, (int) coordY); 
+	public void executeOrder(double coordX, double coordY){
+		if (this == Orders.FOOTMAN_PRODUCTION) {
+			Footman newFootman = new Footman((int) coordX, (int) coordY);
 			Main.addUnit(newFootman);
-			while(CollisionDetector.detectAgainstAll(newFootman)){
-				newFootman.setCoordX((int) (newFootman.getCoordX()+1));
-//				newFootman.setCoordY((int) coordY);
+			while (CollisionDetector.detectAgainstAll(newFootman)) {
+				newFootman.setCoordX((int) (newFootman.getCoordX() + 1));
 			}
-			break;
-		case MarksmanProduction:
-			break;
-		default:
-			break;
-			
 		}
 	}
 
