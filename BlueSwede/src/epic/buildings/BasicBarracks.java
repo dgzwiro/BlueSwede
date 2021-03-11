@@ -23,8 +23,8 @@ public class BasicBarracks implements Building {
     private static final int VALUE = 0;
 
     static {
-        orders.add(Orders.FootmanProduction);
-        orders.add(Orders.MarksmanProduction);
+        orders.add(Orders.FOOTMAN_PRODUCTION);
+        orders.add(Orders.MARKSMAN_PRODUCTION);
 
         File srcImage = new File("BlueSwede/resource/img/basic_barracks.jpg");
         File srcImageBig = new File("BlueSwede/resource/img/basic_barracks_big.jpg");

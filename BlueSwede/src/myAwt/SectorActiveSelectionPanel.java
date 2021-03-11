@@ -63,7 +63,7 @@ public class SectorActiveSelectionPanel extends JPanel implements ActionListener
 	public void actionPerformed(ActionEvent e) {
 		for (JButton button : orders.keySet()) {
 			if (e.getSource() == button) {
-				orders.get(button).ExecuteOrder(showedSelection.getCoords()[0] + ((showedSelection.getSize() / 2) + 5),
+				orders.get(button).executeOrder(showedSelection.getCoords()[0] + ((showedSelection.getSize() / 2) + 5),
 						showedSelection.getCoords()[1] + showedSelection.getSize() + 5);
 			}
 		}
